@@ -1,0 +1,56 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Crops Classification</string>
+    <string name="direction">Classify Crops?</string>
+    <string name="full_name">Full Name*</string>
+    <string name="enter_Name">Enter your full name</string>
+    <string name="email_name">Email*</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="dob_name">Date of Birth*</string>
+    <string name="enter_dob">Select your date of birth(dd/mm/yyyy)</string>
+    <string name="gender">Gender*</string>
+    <string name="male_name">Male</string>
+    <string name="female_name">Female</string>
+    <string name="mobile_name">Mobile*</string>
+    <string name="enter_mobile">Enter phone number</string>
+    <string name="enter_profession">Enter your profession</string>
+    <string name="password_name">Password*</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="confirm_password_name">Confirm password*</string>
+    <string name="enter_confirm_password">Confirm password</string>
+    <string name="register_btn">Register</string>
+
+    <string name="login_btn">Log in</string>
+    <string name="signup_with">Sign up with Gmail</string>
+    <string name="forget_password">Forget password?</string>
+    <string name="have_acc">Dont have account? Register</string>
+    <string name="classify_crops">Classify Crops</string>
+    <string name="settings_option">Settings</string>
+    <string name="logout">Log out</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="change_password">Change Password</string>
+    <string name="register_head">Registration</string>
+    <string name="login_head">Log in</string>
+
+
+
+    <string-array name="crops_name">
+        <item>Rice</item>
+        <item>Jute</item>
+        <item>Maize</item>
+        <item>Sugarcane</item>
+        <item>Wheat</item>
+    </string-array>
+
+    <string-array name="crops_desc">
+        <item>This is Rice Plant</item>
+        <item>This is Jute Plant</item>
+        <item>This is Maize Plant</item>
+        <item>This is Sugarcane Plant</item>
+        <item>This is Wheat Plant</item>
+    </string-array>
+
+
+
+
+
+</resources>

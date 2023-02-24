@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "962633328736",
+    "project_id": "crops-classification-947a8",
+    "storage_bucket": "crops-classification-947a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962633328736:android:a0b428ea32a6e532007b05",
+        "android_client_info": {
+          "package_name": "com.example.cropsclassification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "962633328736-9ludao53ii0jb5uv06u3o3t0vn7lrl9t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiQ9MScwraOnNbu2sRQhJYXd_YnC3jWUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "962633328736-9ludao53ii0jb5uv06u3o3t0vn7lrl9t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

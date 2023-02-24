@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ClassifyActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:background="@drawable/rounded_corner"
+        >
+
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_image_24"
+            />
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+            <Button
+                android:id="@+id/selectBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select image"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:textAllCaps="false"
+                android:backgroundTint="#167E1E"
+                />
+
+
+            <Button
+                android:id="@+id/captureBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Capture image"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:textAllCaps="false"
+                android:backgroundTint="#167E1E"
+                />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <TextView
+            android:id="@+id/imageIcon1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_location_on_24"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/textViewLatLong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:id="@+id/textViewLocationAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/sharePostBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share Result"
+            android:drawableLeft="@drawable/ic_share_24"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#167E1E"
+            android:textAllCaps="false"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
