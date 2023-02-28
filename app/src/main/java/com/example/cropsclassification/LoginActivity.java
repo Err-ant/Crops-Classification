@@ -2,14 +2,14 @@ package com.example.cropsclassification;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,48 +58,60 @@ public class LoginActivity extends AppCompatActivity {
 
         authUser = FirebaseAuth.getInstance();
 
+
         activityLoginBinding.editTextLoginEmail.addTextChangedListener(new TextWatcher() {
+            private final long DELAY = 100; // Delay time in milliseconds
+            private Handler handler = new Handler(Looper.getMainLooper());
+            private Runnable runnable;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Not used in this example
+                // Not needed
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Retrieve up to 5 emails that match the input string
-                Query query = mDatabase.orderByChild("Email")
-                        .startAt(s.toString())
-                        .endAt(s + "\uf8ff")
-                        .limitToFirst(5);
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
+                    activityLoginBinding.emailErrorMessage.setText("");
+                } else {
+                    activityLoginBinding.emailErrorMessage.setText("Invalid email address");
+                }
+
+                handler.removeCallbacks(runnable); // Remove the previous runnable
+                runnable = new Runnable() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Clear previous results
-                        emailList.clear();
-
-                        // Loop through the query results and add the emails to the list
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            String email = snapshot.child("email").getValue(String.class);
-                            emailList.add(email);
+                    public void run() {
+                        if (!s.toString().isEmpty()) { // Check if the email is not empty
+                            // Check if email is already registered
+                            FirebaseAuth.getInstance().fetchSignInMethodsForEmail(s.toString())
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            List<String> signInMethods = task.getResult().getSignInMethods();
+                                            if (signInMethods != null && signInMethods.size() > 0) {
+                                                activityLoginBinding.emailErrorMessage.setText("");
+                                            } else {
+                                                activityLoginBinding.emailErrorMessage.setText("No registered user with this Email");
+                                            }
+                                        } else {
+                                            // Handle errors
+                                            activityLoginBinding.emailErrorMessage.setText(task.getException().getMessage());
+                                        }
+                                    });
+                        } else {
+                            activityLoginBinding.emailErrorMessage.setText("");
                         }
-
-                        // Update the UI with the new list of emails
-                        updateEmailListUI();
                     }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Handle errors here
-                    }
-                });
+                };
+                handler.postDelayed(runnable, DELAY); // Schedule the new runnable
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Not used in this example
+                // Not needed
             }
         });
+
 
 
         activityLoginBinding.loginButton.setOnClickListener(new View.OnClickListener() {
@@ -141,13 +149,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void updateEmailListUI() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.activity_login, emailList);
-        ListView emailListView = findViewById(R.id.email_list);
-        emailListView.setAdapter(adapter);
-        emailListView.setVisibility(emailList.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
 

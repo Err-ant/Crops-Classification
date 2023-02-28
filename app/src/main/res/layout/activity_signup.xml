@@ -74,11 +74,19 @@
             />
 
         <TextView
+            android:id="@+id/singUpEmailErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#CF0202"
+            />
+
+        <TextView
             android:id="@+id/text_view_register_dob"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/dob_name"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="0dp"
             android:padding="5dp"
             android:textSize="18sp"
 

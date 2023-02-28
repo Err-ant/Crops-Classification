@@ -3,7 +3,11 @@ package com.example.cropsclassification;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cropsclassification.databinding.ActivitySignupBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,8 +34,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class SignupActivity extends AppCompatActivity {
+
+    ActivitySignupBinding activitySignupBinding;
 
     private EditText editTextFullName, editTextEmail, editTextDob, editTextMobile, editTextPassword, editTextConPassword;
 
@@ -44,8 +52,10 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        activitySignupBinding = ActivitySignupBinding.inflate(getLayoutInflater());
+        setContentView(activitySignupBinding.getRoot());
         getSupportActionBar().setTitle("Registration");
 
         editTextFullName = findViewById(R.id.edit_text_full_name);
@@ -57,6 +67,60 @@ public class SignupActivity extends AppCompatActivity {
 
         radioGroupGender = findViewById(R.id.radio_group_register_gender);
         radioGroupGender.clearCheck();
+
+        //realtime email checking from database and the entering email format
+        activitySignupBinding.editTextEmail.addTextChangedListener(new TextWatcher() {
+            private final long DELAY = 100; // Delay time in milliseconds
+            private Handler handler = new Handler(Looper.getMainLooper());
+            private Runnable runnable;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                handler.removeCallbacks(runnable); // Remove the previous runnable
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
+                            if (!s.toString().isEmpty()) { // Check if the email is not empty
+                                // Check if email is already registered
+                                FirebaseAuth.getInstance().fetchSignInMethodsForEmail(s.toString())
+                                        .addOnCompleteListener(task -> {
+                                            if (task.isSuccessful()) {
+                                                List<String> signInMethods = task.getResult().getSignInMethods();
+                                                if (signInMethods != null && signInMethods.size() > 0) {
+                                                    activitySignupBinding.singUpEmailErrorMessage.setText("Email is already registered.");
+                                                } else {
+                                                    activitySignupBinding.singUpEmailErrorMessage.setText("");
+                                                }
+                                            } else {
+                                                // Handle errors
+                                                activitySignupBinding.singUpEmailErrorMessage.setText(task.getException().getMessage());
+                                            }
+                                        });
+                            } else {
+                                activitySignupBinding.singUpEmailErrorMessage.setText("Invalid email address");
+                            }
+                        } else {
+                            activitySignupBinding.singUpEmailErrorMessage.setText("Invalid email address");
+                        }
+                    }
+                };
+                handler.postDelayed(runnable, DELAY); // Schedule the new runnable
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed
+            }
+        });
+
 
         //Setting up Date picker on editText
         editTextDob.setOnClickListener(new View.OnClickListener() {
