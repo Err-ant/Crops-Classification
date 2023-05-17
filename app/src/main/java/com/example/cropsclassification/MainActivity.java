@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cropsclassification.databinding.ActivityMainBinding;
@@ -78,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ClassifyActivity.class);
                 startActivity(intent);
                 return true;
+
+            case R.id.gotoVideoPlayer:
+                Intent intentEmbedVideo = new Intent(MainActivity.this, EmbedVideo.class);
+                startActivity(intentEmbedVideo);
+                return true;
+
 
             case R.id.changePass:
                 Toast.makeText(this, "Change password is selected", Toast.LENGTH_SHORT).show();

@@ -13,6 +13,11 @@
         app:showAsAction="never"
         />
     <item
+        android:id="@+id/gotoVideoPlayer"
+        android:title="@string/video_player"
+        app:showAsAction="never"
+        />
+    <item
         android:id="@+id/settings"
         android:title="@string/settings_option"
         app:showAsAction="never"

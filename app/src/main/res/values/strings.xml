@@ -24,13 +24,13 @@
     <string name="forget_password">Forget password?</string>
     <string name="have_acc">Dont have account? Register</string>
     <string name="classify_crops">Classify Crops</string>
+    <string name="video_player">Video Player</string>
     <string name="settings_option">Settings</string>
     <string name="logout">Log out</string>
     <string name="delete_account">Delete Account</string>
     <string name="change_password">Change Password</string>
     <string name="register_head">Registration</string>
     <string name="login_head">Log in</string>
-
 
 
     <string-array name="crops_name">
@@ -48,9 +48,6 @@
         <item>This is Sugarcane Plant</item>
         <item>This is Wheat Plant</item>
     </string-array>
-
-
-
 
 
 </resources>
