@@ -115,6 +115,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void uploadProfilePicture() {
         if(uriImage != null){
+
             //save the image with uid of the currently logged user
             StorageReference fileReference = storageRef.child(firebaseAuth.getCurrentUser().getUid() + "."
             + getFileExtension(uriImage));

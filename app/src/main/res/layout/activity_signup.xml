@@ -216,6 +216,13 @@
             android:textStyle="bold"
             />
 
+        <ProgressBar
+            android:id="@+id/progressBarSignupId"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:visibility="gone" />
 
 
 

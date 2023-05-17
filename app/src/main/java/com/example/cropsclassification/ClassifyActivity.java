@@ -3,6 +3,7 @@ package com.example.cropsclassification;
 import static java.lang.Math.ceil;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -15,6 +16,9 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
+import android.webkit.MimeTypeMap;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,10 +39,21 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.label.Category;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -48,11 +63,72 @@ public class ClassifyActivity extends AppCompatActivity {
 
     ActivityClassifyBinding activityClassifyBinding;
 
+    private String userID, userName, predictionResult, uploadLocation;
+    int numberOfReact, rating;
+    private ProgressBar progressBar;
+
     Bitmap bitmap;
+    private Uri postUriImage;
+
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+    StorageReference storageReference;
+    DatabaseReference databaseReference;
 
     private static final String TAG = "ClassifyActivity";
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationRequest locationRequest;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        activityClassifyBinding = ActivityClassifyBinding.inflate(getLayoutInflater());
+        setContentView(activityClassifyBinding.getRoot());
+        getSupportActionBar().setTitle("Classify Crops");
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ClassifyActivity.this);
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(4000);
+        locationRequest.setFastestInterval(2000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
+        storageReference = FirebaseStorage.getInstance().getReference("PostImages");
+        databaseReference = FirebaseDatabase.getInstance().getReference("PostImages");
+
+        activityClassifyBinding.selectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 10);
+            }
+        });
+
+        activityClassifyBinding.captureBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, 12);
+
+            }
+        });
+
+        activityClassifyBinding.sharePostBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                UploadImage();
+            }
+        });
+
+
+    }
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -78,49 +154,13 @@ public class ClassifyActivity extends AppCompatActivity {
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        activityClassifyBinding = ActivityClassifyBinding.inflate(getLayoutInflater());
-        setContentView(activityClassifyBinding.getRoot());
-        getSupportActionBar().setTitle("Classify Crops");
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ClassifyActivity.this);
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(4000);
-        locationRequest.setFastestInterval(2000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-
-        activityClassifyBinding.selectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, 10);
-            }
-        });
-
-        activityClassifyBinding.captureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 12);
-
-            }
-        });
-
-
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 10) {
             if (data != null) {
                 Uri uri = data.getData();
+                postUriImage = data.getData();
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
                     activityClassifyBinding.imageView.setImageBitmap(bitmap);
@@ -133,11 +173,18 @@ public class ClassifyActivity extends AppCompatActivity {
                 }
             }
         } else if (requestCode == 12) {
-            bitmap = (Bitmap) data.getExtras().get("data");
-            activityClassifyBinding.imageView.setImageBitmap(bitmap);
-            predict();
-            checkSettingsAndStartLocationUpdates();
-            //stopLocationUpdates();
+            if (data != null) {
+
+                bitmap = (Bitmap) data.getExtras().get("data");
+                postUriImage = getImageUri(bitmap);
+
+                activityClassifyBinding.imageView.setImageBitmap(bitmap);
+                predict();
+                checkSettingsAndStartLocationUpdates();
+
+                //stopLocationUpdates();
+
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -157,6 +204,8 @@ public class ClassifyActivity extends AppCompatActivity {
 
             probability.sort(Comparator.comparing(Category::getScore, Comparator.reverseOrder()));
             int score = (int) ceil(probability.get(0).getScore() * 100);
+
+            predictionResult = "Prediction :" + probability.get(0).getLabel() + "(" + score +"%)";
             activityClassifyBinding.result.setText(probability.get(0).getLabel() + ": " + score +"%");
 
             // Releases model resources if no longer used.
@@ -267,5 +316,73 @@ public class ClassifyActivity extends AppCompatActivity {
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+    private String getFileExtension(Uri uriImage) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uriImage));
+    }
+
+    public void UploadImage() {
+
+        if (postUriImage != null) {
+
+            activityClassifyBinding.progressBarPostBtn.setVisibility(View.VISIBLE);
+
+            userID = firebaseUser.getUid();
+            //Extracting User reference from database for "Users"
+            DatabaseReference databaseReferenceCurr = FirebaseDatabase.getInstance().getReference("Users");
+            databaseReferenceCurr.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    UserDetails userDetails = snapshot.getValue(UserDetails.class);
+                    if(userDetails != null){
+                        userName = userDetails.fullName;
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(ClassifyActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            //Upload post data
+            StorageReference storageReference2 = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(postUriImage));
+            storageReference2.putFile(postUriImage)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            String TempImageName = activityClassifyBinding.result.getText().toString().trim();
+                            String imageURL = taskSnapshot.getUploadSessionUri().toString();
+
+                            Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
+
+                            @SuppressWarnings("VisibleForTests")
+                            PostDetailsModel imageUploadInfo = new PostDetailsModel(TempImageName, imageURL, userID, userName, uploadLocation, 5, 2);
+
+                            String ImageUploadId = databaseReference.push().getKey();
+                            databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
+                            activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
+                        }
+                    });
+
+
+
+        }
+        else {
+            Toast.makeText(ClassifyActivity.this, "Handle URI image error!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private Uri getImageUri(Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
+
 
 }

@@ -93,6 +93,13 @@
         android:layout_height="420dp"
         android:src="@drawable/img01" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/line_divider"/>
+
     <!-- Post Actions -->
     <LinearLayout
         android:orientation="horizontal"
@@ -113,7 +120,7 @@
                 android:id="@+id/like_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_person_24" />
+                android:src="@drawable/ic_thumb_up_24" />
 
             <TextView
                 android:id="@+id/like_count"
@@ -138,7 +145,7 @@
                 android:id="@+id/comment_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_person_24" />
+                android:src="@drawable/ic_comment_24" />
 
             <TextView
                 android:id="@+id/comment_count"
@@ -163,7 +170,7 @@
                 android:id="@+id/share_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_person_24" />
+                android:src="@drawable/ic_star_rate_24" />
 
             <TextView
                 android:id="@+id/share_count"
@@ -179,7 +186,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/line_divider"/>
 </LinearLayout>

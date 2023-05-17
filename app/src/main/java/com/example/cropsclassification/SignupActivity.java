@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText editTextFullName, editTextEmail, editTextDob, editTextMobile, editTextPassword, editTextConPassword;
 
+    private ProgressBar progressBar;
     private RadioGroup radioGroupGender;
     private RadioButton radioButtonGenderSelected;
     private DatePickerDialog picker;
@@ -64,6 +66,8 @@ public class SignupActivity extends AppCompatActivity {
         editTextMobile = findViewById(R.id.edit_text_mobile);
         editTextPassword = findViewById(R.id.edit_text_password);
         editTextConPassword = findViewById(R.id.edit_text_confirm_password);
+
+        progressBar = findViewById(R.id.progressBarSignupId);
 
         radioGroupGender = findViewById(R.id.radio_group_register_gender);
         radioGroupGender.clearCheck();
@@ -221,8 +225,11 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 else{
                     textGender = radioButtonGenderSelected.getText().toString();
+                    progressBar.setVisibility(View.VISIBLE);
                     registerUser(textFullName, textEmail, textDob, textGender, textMobile, textPassword);
                 }
+
+
 
 
             }
