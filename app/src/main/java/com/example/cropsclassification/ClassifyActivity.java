@@ -64,7 +64,7 @@ public class ClassifyActivity extends AppCompatActivity {
     ActivityClassifyBinding activityClassifyBinding;
 
     private String userID, userName, predictionResult, uploadLocation;
-    int numberOfReact, rating;
+
     private ProgressBar progressBar;
 
     Bitmap bitmap;
@@ -95,7 +95,6 @@ public class ClassifyActivity extends AppCompatActivity {
         locationRequest.setInterval(4000);
         locationRequest.setFastestInterval(2000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
 
         storageReference = FirebaseStorage.getInstance().getReference("PostImages");
         databaseReference = FirebaseDatabase.getInstance().getReference("PostImages");
@@ -142,9 +141,8 @@ public class ClassifyActivity extends AppCompatActivity {
                 try {
                     List<Address> addressList = geocoder.getFromLocation(location.getLatitude(),
                             location.getLongitude(), 1);
-                    activityClassifyBinding.textViewLatLong.setText("Latitude : " + addressList.get(0).getLatitude()
-                            + "\nLongitude : " + addressList.get(0).getLongitude());
 
+                    uploadLocation = addressList.get(0).getAddressLine(0);
                     activityClassifyBinding.textViewLocationAddress.setText(addressList.get(0).getAddressLine(0));
                     stopLocationUpdates();
                 } catch (IOException e) {
@@ -205,7 +203,7 @@ public class ClassifyActivity extends AppCompatActivity {
             probability.sort(Comparator.comparing(Category::getScore, Comparator.reverseOrder()));
             int score = (int) ceil(probability.get(0).getScore() * 100);
 
-            predictionResult = "Prediction :" + probability.get(0).getLabel() + "(" + score +"%)";
+            predictionResult = "Prediction: " + probability.get(0).getLabel() + "(" + score +"%)";
             activityClassifyBinding.result.setText(probability.get(0).getLabel() + ": " + score +"%");
 
             // Releases model resources if no longer used.
@@ -347,23 +345,42 @@ public class ClassifyActivity extends AppCompatActivity {
                 }
             });
 
-            //Upload post data
+            // Upload post data
             StorageReference storageReference2 = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(postUriImage));
             storageReference2.putFile(postUriImage)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            String TempImageName = activityClassifyBinding.result.getText().toString().trim();
-                            String imageURL = taskSnapshot.getUploadSessionUri().toString();
+                            // Get the download URL of the uploaded image
+                            storageReference2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String imageURL = uri.toString();
 
-                            Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Post Updated", Toast.LENGTH_LONG).show();
 
-                            @SuppressWarnings("VisibleForTests")
-                            PostDetailsModel imageUploadInfo = new PostDetailsModel(TempImageName, imageURL, userID, userName, uploadLocation, 5, 2);
+                                    @SuppressWarnings("VisibleForTests")
+                                    PostDetailsModel imageUploadInfo = new PostDetailsModel(imageURL, userID, userName, predictionResult, uploadLocation, 5, 2);
 
-                            String ImageUploadId = databaseReference.push().getKey();
-                            databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
+                                    String ImageUploadId = databaseReference.push().getKey();
+                                    databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
+                                    activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle any errors that occurred while retrieving the download URL
+                                    Toast.makeText(ClassifyActivity.this, "Failed to retrieve image download URL", Toast.LENGTH_SHORT).show();
+                                    activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Handle any errors that occurred while uploading the image
+                            Toast.makeText(ClassifyActivity.this, "Image upload failed", Toast.LENGTH_SHORT).show();
                             activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
                         }
                     });

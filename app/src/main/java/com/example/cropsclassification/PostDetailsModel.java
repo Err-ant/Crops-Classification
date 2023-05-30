@@ -5,13 +5,15 @@ public class PostDetailsModel {
     public String imageURL;
     public String userID, userName, predictionResult, uploadLocation;
     int numberOfReact, rating;
+
     public PostDetailsModel(){}
 
-    public PostDetailsModel(String name, String url, String userID, String userName, String uploadLocation, int numberOfReact, int rating) {
-        this.predictionResult = name;
+    public PostDetailsModel( String url, String userID, String userName, String predictionResult, String uploadLocation, int numberOfReact, int rating) {
+
         this.imageURL = url;
         this.userID = userID;
         this.userName = userName;
+        this.predictionResult = predictionResult;
         this.uploadLocation = uploadLocation;
         this.numberOfReact = numberOfReact;
         this.rating = rating;
@@ -74,6 +76,4 @@ public class PostDetailsModel {
     public void setRating(int rating) {
         this.rating = rating;
     }
-
-
 }

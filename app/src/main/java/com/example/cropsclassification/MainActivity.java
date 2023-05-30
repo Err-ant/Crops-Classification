@@ -11,23 +11,33 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropsclassification.databinding.ActivityMainBinding;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding activityMainBinding;
 
     private FirebaseAuth authUser;
+    FirebaseUser firebaseUser;
+    StorageReference storageReference;
+    DatabaseReference databaseReference;
 
-    int[] images = {R.drawable.rice, R.drawable.jute, R.drawable.maize, R.drawable.sugarcan, R.drawable.wheat};
-    String[] cropsName, cropsDesc;
+    RecyclerView recyclerView;
+
 
     ListItemAdapter listItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -35,24 +45,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
         getSupportActionBar().setTitle("Home Page");
 
-        cropsName = getResources().getStringArray(R.array.crops_name);
-        cropsDesc = getResources().getStringArray(R.array.crops_desc);
-
-        listItemAdapter = new ListItemAdapter(this, cropsName, cropsDesc, images);
-
-        activityMainBinding.recyclerViewID.setAdapter(listItemAdapter);
         activityMainBinding.recyclerViewID.setLayoutManager(new LinearLayoutManager(this));
 
 
-        /*
-        activityMainBinding.gotoProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
-            }
-        }); */
+        FirebaseRecyclerOptions<PostDetailsModel> options =
+                new FirebaseRecyclerOptions.Builder<PostDetailsModel>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("PostImages"), PostDetailsModel.class)
+                        .build();
 
+        listItemAdapter = new ListItemAdapter(options);
+
+        activityMainBinding.recyclerViewID.setAdapter(listItemAdapter);
 
 
     }
@@ -102,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
 
-    }
+        }
 
-}
+    }
 
     @Override
     protected void onStart() {
@@ -114,5 +117,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         }
+        listItemAdapter.startListening();
     }
+
+
 }
