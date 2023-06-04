@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/timestamp"
+                android:id="@+id/postTimestamp"
                 android:text="2 hours ago"
                 android:textSize="14sp"
                 android:textColor="#8C8C8C"
@@ -112,7 +112,7 @@
         android:layout_height="wrap_content">
         <!-- Like Button -->
         <LinearLayout
-            android:id="@+id/likecc"
+
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_weight="1"
@@ -120,13 +120,13 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/like_button"
+                android:id="@+id/likecc"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_thumb_up_24" />
+                android:src="@drawable/ic_baseline_favorite" />
 
             <TextView
-                android:id="@+id/likeCount"
+                android:id="@+id/likeCou"
                 android:text="20"
                 android:textSize="14sp"
                 android:textColor="#000000"

@@ -2,17 +2,19 @@ package com.example.cropsclassification;
 
 public class PostDetailsModel {
 
-    public String imageURL;
-    public String userID, userName, predictionResult, uploadLocation;
+    public String imageUploadId, imageURL;
+    public String userID, userName, currDateTime, predictionResult, uploadLocation;
     int numberOfReact, rating;
 
     public PostDetailsModel(){}
 
-    public PostDetailsModel( String url, String userID, String userName, String predictionResult, String uploadLocation, int numberOfReact, int rating) {
+    public PostDetailsModel(String imageUploadId, String url, String userID, String userName, String currDateTime, String predictionResult, String uploadLocation, int numberOfReact, int rating) {
 
+        this.imageUploadId = imageUploadId;
         this.imageURL = url;
         this.userID = userID;
         this.userName = userName;
+        this.currDateTime = currDateTime;
         this.predictionResult = predictionResult;
         this.uploadLocation = uploadLocation;
         this.numberOfReact = numberOfReact;
@@ -20,6 +22,13 @@ public class PostDetailsModel {
 
     }
 
+    public String getImageUploadId() {
+        return imageUploadId;
+    }
+
+    public void setImageUploadId(String imageUploadId) {
+        this.imageUploadId = imageUploadId;
+    }
 
     public String getImageURL() {
         return imageURL;
@@ -43,6 +52,14 @@ public class PostDetailsModel {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getCurrDateTime() {
+        return currDateTime;
+    }
+
+    public void setCurrDateTime(String currDateTime) {
+        this.currDateTime = currDateTime;
     }
 
     public String getPredictionResult() {

@@ -3,35 +3,28 @@ package com.example.cropsclassification;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, ListItemAdapter.myViewHolder> {
+public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, myViewHolder> {
+
+    FirebaseUser firebaseUser;
+    DatabaseReference likeRef;
+    Boolean testClick = false;
 
     public ListItemAdapter(@NonNull FirebaseRecyclerOptions<PostDetailsModel> options) {
         super(options);
-    }
-
-    @Override
-    protected void onBindViewHolder(@NonNull myViewHolder holder, int position, @NonNull PostDetailsModel model) {
-
-        holder.userName.setText(model.getUserName());
-        holder.prRes.setText(model.getPredictionResult());
-        holder.postLoc.setText(model.getUploadLocation());
-        holder.numReact.setText(String.valueOf(model.getNumberOfReact()));
-        holder.numRating.setText(String.valueOf(model.getRating()));
-
-        Glide.with(holder.img.getContext()).load(model.getImageURL()).into(holder.img);
-
     }
 
     @NonNull
@@ -41,39 +34,59 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, L
         return new myViewHolder(view);
     }
 
-    class myViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    protected void onBindViewHolder(@NonNull myViewHolder holder, int position, @NonNull PostDetailsModel model) {
 
-        ImageView img;
-        TextView userName, prRes, postLoc, numReact, numRating;
-        LinearLayout likee;
-        public myViewHolder(@NonNull View itemView) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = firebaseUser.getUid();
+        String postKey = getRef(position).getKey();
 
-            super(itemView);
-            img = itemView.findViewById(R.id.postImage);
-            userName = itemView.findViewById(R.id.postUserName);
-            prRes = itemView.findViewById(R.id.postText);
-            postLoc = itemView.findViewById(R.id.postLocationText);
-            numReact = itemView.findViewById(R.id.likeCount);
-            numRating = itemView.findViewById(R.id.ratingCount);
-            likee = itemView.findViewById(R.id.likecc);
+        holder.getLikeButtonStatus(postKey, userId);
 
-            likee.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Handle the click event for numReact TextView
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        // Retrieve the PostDetailsModel at the clicked position
-                        PostDetailsModel model = getItem(position);
+        holder.userName.setText(model.getUserName());
+        holder.postTimeStamp.setText(model.getCurrDateTime());
+        holder.prRes.setText(model.getPredictionResult());
+        holder.postLoc.setText(model.getUploadLocation());
+        holder.numReact.setText(String.valueOf(model.getNumberOfReact()));
+        holder.numRating.setText(String.valueOf(model.getRating()));
+        Glide.with(holder.img.getContext()).load(model.getImageURL()).into(holder.img);
 
-                        // Perform any desired action with the model
-                        // For example, you can show a Toast with the number of reacts
-                        Toast.makeText(itemView.getContext(), "Number of reacts: " + model.getNumberOfReact(), Toast.LENGTH_SHORT).show();
+
+        holder.getLikeButtonStatus(postKey, userId);
+
+        likeRef = FirebaseDatabase.getInstance().getReference("likes");
+
+        // Set the click listener for the likee view
+        holder.likeImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                testClick = true;
+                likeRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        if(testClick == true){
+
+                            if(snapshot.child(postKey).hasChild(userId)){
+                                likeRef.child(postKey).child(userId).removeValue();
+                                testClick = false;
+                            }
+                            else{
+                                likeRef.child(postKey).child(userId).setValue(true);
+                                testClick = false;
+                            }
+                        }
                     }
-                }
-            });
 
-        }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        });
     }
 
 

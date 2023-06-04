@@ -17,7 +17,6 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,6 +54,8 @@ import org.tensorflow.lite.support.label.Category;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -64,8 +65,6 @@ public class ClassifyActivity extends AppCompatActivity {
     ActivityClassifyBinding activityClassifyBinding;
 
     private String userID, userName, predictionResult, uploadLocation;
-
-    private ProgressBar progressBar;
 
     Bitmap bitmap;
     private Uri postUriImage;
@@ -141,6 +140,11 @@ public class ClassifyActivity extends AppCompatActivity {
                 try {
                     List<Address> addressList = geocoder.getFromLocation(location.getLatitude(),
                             location.getLongitude(), 1);
+
+                    /*
+                    activityClassifyBinding.textViewLatLong.setText("Latitude : " + addressList.get(0).getLatitude()
+                            + "\nLongitude : " + addressList.get(0).getLongitude());
+                    */
 
                     uploadLocation = addressList.get(0).getAddressLine(0);
                     activityClassifyBinding.textViewLocationAddress.setText(addressList.get(0).getAddressLine(0));
@@ -345,6 +349,10 @@ public class ClassifyActivity extends AppCompatActivity {
                 }
             });
 
+
+            // Get the current date and time
+            String currDateTime = getCurrentDateTime();
+
             // Upload post data
             StorageReference storageReference2 = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(postUriImage));
             storageReference2.putFile(postUriImage)
@@ -360,10 +368,8 @@ public class ClassifyActivity extends AppCompatActivity {
 
                                     Toast.makeText(getApplicationContext(), "Post Updated", Toast.LENGTH_LONG).show();
 
-                                    @SuppressWarnings("VisibleForTests")
-                                    PostDetailsModel imageUploadInfo = new PostDetailsModel(imageURL, userID, userName, predictionResult, uploadLocation, 5, 2);
-
                                     String ImageUploadId = databaseReference.push().getKey();
+                                    PostDetailsModel imageUploadInfo = new PostDetailsModel(ImageUploadId, imageURL, userID, userName, currDateTime, predictionResult, uploadLocation, 0, 0);
                                     databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
                                     activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
                                 }
@@ -398,6 +404,12 @@ public class ClassifyActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
         return Uri.parse(path);
+    }
+
+    private String getCurrentDateTime() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
+        return dateFormat.format(calendar.getTime());
     }
 
 

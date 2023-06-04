@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("PostImages"), PostDetailsModel.class)
                         .build();
 
+
         listItemAdapter = new ListItemAdapter(options);
 
         activityMainBinding.recyclerViewID.setAdapter(listItemAdapter);
