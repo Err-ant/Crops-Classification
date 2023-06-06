@@ -13,22 +13,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class myViewHolder extends RecyclerView.ViewHolder {
 
-    ImageView img, likeImg;
-    TextView userName, prRes, postLoc, numReact, numRating, postTimeStamp;
+    CircleImageView postProfileImage;
+    ImageView img, likeImg, commentImg;
+    TextView userName, prRes, postLoc, numReact, postTimeStamp, commentCnt;
     DatabaseReference likeReference;
 
     public myViewHolder(@NonNull View itemView) {
         super(itemView);
+
+        postProfileImage = itemView.findViewById(R.id.postUserProfileImage);
         img = itemView.findViewById(R.id.postImage);
         userName = itemView.findViewById(R.id.postUserName);
         postTimeStamp = itemView.findViewById(R.id.postTimestamp);
         prRes = itemView.findViewById(R.id.postText);
         postLoc = itemView.findViewById(R.id.postLocationText);
         numReact = itemView.findViewById(R.id.likeCou);
-        numRating = itemView.findViewById(R.id.ratingCount);
         likeImg = itemView.findViewById(R.id.likecc);
+        commentImg = itemView.findViewById(R.id.comment_button);
+        commentCnt = itemView.findViewById(R.id.commentCount);
     }
 
 

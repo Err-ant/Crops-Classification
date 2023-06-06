@@ -96,7 +96,7 @@ public class ClassifyActivity extends AppCompatActivity {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         storageReference = FirebaseStorage.getInstance().getReference("PostImages");
-        databaseReference = FirebaseDatabase.getInstance().getReference("PostImages");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
 
         activityClassifyBinding.selectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -339,7 +339,7 @@ public class ClassifyActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     UserDetails userDetails = snapshot.getValue(UserDetails.class);
                     if(userDetails != null){
-                        userName = userDetails.fullName;
+                        userName = userDetails.userName;
                     }
                 }
 
@@ -364,12 +364,17 @@ public class ClassifyActivity extends AppCompatActivity {
                             storageReference2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
+
                                     String imageURL = uri.toString();
 
                                     Toast.makeText(getApplicationContext(), "Post Updated", Toast.LENGTH_LONG).show();
 
                                     String ImageUploadId = databaseReference.push().getKey();
-                                    PostDetailsModel imageUploadInfo = new PostDetailsModel(ImageUploadId, imageURL, userID, userName, currDateTime, predictionResult, uploadLocation, 0, 0);
+
+                                    String postProfileImageUrl = firebaseUser.getPhotoUrl().toString();
+
+                                    PostDetailsModel imageUploadInfo = new PostDetailsModel(postProfileImageUrl, imageURL, userID, userName, currDateTime, predictionResult, uploadLocation, 0, 0);
+
                                     databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
                                     activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
                                 }

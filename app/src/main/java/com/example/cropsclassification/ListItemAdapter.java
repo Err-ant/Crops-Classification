@@ -1,5 +1,7 @@
 package com.example.cropsclassification;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +25,11 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
     DatabaseReference likeRef;
     Boolean testClick = false;
 
-    public ListItemAdapter(@NonNull FirebaseRecyclerOptions<PostDetailsModel> options) {
+    private Context mContext;
+
+    public ListItemAdapter(@NonNull FirebaseRecyclerOptions<PostDetailsModel> options, Context context) {
         super(options);
+        mContext = context;
     }
 
     @NonNull
@@ -43,16 +48,31 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
 
         holder.getLikeButtonStatus(postKey, userId);
 
+        if(model.getProfileImageUrl()!=null){
+            Glide.with(holder.postProfileImage.getContext()).load(model.getProfileImageUrl()).into(holder.postProfileImage);
+        }
+
         holder.userName.setText(model.getUserName());
         holder.postTimeStamp.setText(model.getCurrDateTime());
         holder.prRes.setText(model.getPredictionResult());
         holder.postLoc.setText(model.getUploadLocation());
         holder.numReact.setText(String.valueOf(model.getNumberOfReact()));
-        holder.numRating.setText(String.valueOf(model.getRating()));
+
         Glide.with(holder.img.getContext()).load(model.getImageURL()).into(holder.img);
 
+        DatabaseReference commentRef = FirebaseDatabase.getInstance().getReference().child("Posts").child(postKey).child("comments");
+        commentRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int commCount = (int)snapshot.getChildrenCount();
+                holder.commentCnt.setText(String.valueOf(commCount));
+            }
 
-        holder.getLikeButtonStatus(postKey, userId);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         likeRef = FirebaseDatabase.getInstance().getReference("likes");
 
@@ -85,6 +105,15 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
                     }
                 });
 
+            }
+        });
+
+        holder.commentImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(mContext,CommentActivity.class);
+                intent.putExtra("postKey",postKey);
+                mContext.startActivity(intent);
             }
         });
     }

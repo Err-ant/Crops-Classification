@@ -41,6 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
     String fullName, email, dob, gender, mobile;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -54,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         showUserProfileDetails();
 
-        storageRef = FirebaseStorage.getInstance().getReference("ProfilePics");
+        storageRef = FirebaseStorage.getInstance().getReference("ProfilePicture");
 
         //choosing image to upload
         activityProfileBinding.imageViewProfilePic.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 UserDetails userDetails = snapshot.getValue(UserDetails.class);
                 if(userDetails != null){
-                    fullName = userDetails.fullName;
+                    fullName = userDetails.userName;
                     email = firebaseUser.getEmail();
                     dob = userDetails.dob;
                     gender = userDetails.gender;
@@ -128,12 +129,14 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             Uri downloadUri = uri;
+
                             firebaseUser = firebaseAuth.getCurrentUser();
 
                             // Finally set the display image of the user after upload
                             UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
                                     .setPhotoUri(downloadUri).build();
                             firebaseUser.updateProfile(userProfileChangeRequest);
+
                         }
                     });
                     Toast.makeText(ProfileActivity.this, "Uploaded successful!", Toast.LENGTH_SHORT).show();

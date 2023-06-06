@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = activityMainBinding.getRoot();
         setContentView(view);
+
         getSupportActionBar().setTitle("Home Page");
 
         activityMainBinding.recyclerViewID.setLayoutManager(new LinearLayoutManager(this));
@@ -50,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseRecyclerOptions<PostDetailsModel> options =
                 new FirebaseRecyclerOptions.Builder<PostDetailsModel>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("PostImages"), PostDetailsModel.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("Posts"), PostDetailsModel.class)
                         .build();
 
 
-        listItemAdapter = new ListItemAdapter(options);
+        listItemAdapter = new ListItemAdapter(options, MainActivity.this);
 
         activityMainBinding.recyclerViewID.setAdapter(listItemAdapter);
 

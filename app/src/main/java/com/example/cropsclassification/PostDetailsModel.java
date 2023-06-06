@@ -2,15 +2,15 @@ package com.example.cropsclassification;
 
 public class PostDetailsModel {
 
-    public String imageUploadId, imageURL;
+    public String profileImageUrl, imageURL;
     public String userID, userName, currDateTime, predictionResult, uploadLocation;
     int numberOfReact, rating;
 
     public PostDetailsModel(){}
 
-    public PostDetailsModel(String imageUploadId, String url, String userID, String userName, String currDateTime, String predictionResult, String uploadLocation, int numberOfReact, int rating) {
+    public PostDetailsModel(String profileImageUrl, String url, String userID, String userName, String currDateTime, String predictionResult, String uploadLocation, int numberOfReact, int rating) {
 
-        this.imageUploadId = imageUploadId;
+        this.profileImageUrl = profileImageUrl;
         this.imageURL = url;
         this.userID = userID;
         this.userName = userName;
@@ -22,12 +22,12 @@ public class PostDetailsModel {
 
     }
 
-    public String getImageUploadId() {
-        return imageUploadId;
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 
-    public void setImageUploadId(String imageUploadId) {
-        this.imageUploadId = imageUploadId;
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getImageURL() {
