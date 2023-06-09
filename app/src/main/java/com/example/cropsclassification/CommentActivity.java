@@ -73,7 +73,13 @@ public class CommentActivity extends AppCompatActivity {
                         {
                             String commentUserName = snapshot.child("userName").getValue().toString();
 
-                            String commentUserImage = firebaseUser.getPhotoUrl().toString();;
+                            String commentUserImage;
+                            if (firebaseUser.getPhotoUrl() != null) {
+                                commentUserImage = firebaseUser.getPhotoUrl().toString();
+                            } else {
+                                // Set the profile image from a drawable resource
+                                commentUserImage = "android.resources://" + getPackageName() + "/" + R.drawable.ic_person_24;
+                            }
 
                             processComment(commentUserName,commentUserImage, currentUserId);
 

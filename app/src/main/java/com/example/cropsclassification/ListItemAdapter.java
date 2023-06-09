@@ -48,15 +48,12 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
 
         holder.getLikeButtonStatus(postKey, userId);
 
-        if(model.getProfileImageUrl()!=null){
-            Glide.with(holder.postProfileImage.getContext()).load(model.getProfileImageUrl()).into(holder.postProfileImage);
-        }
+        Glide.with(holder.postProfileImage.getContext()).load(model.getProfileImageUrl()).placeholder(R.drawable.ic_person_24).into(holder.postProfileImage);
 
         holder.userName.setText(model.getUserName());
         holder.postTimeStamp.setText(model.getCurrDateTime());
         holder.prRes.setText(model.getPredictionResult());
         holder.postLoc.setText(model.getUploadLocation());
-        holder.numReact.setText(String.valueOf(model.getNumberOfReact()));
 
         Glide.with(holder.img.getContext()).load(model.getImageURL()).into(holder.img);
 

@@ -112,6 +112,7 @@
             android:drawableLeft="@drawable/ic_share_24"
             android:layout_gravity="center"
             android:textSize="18sp"
+            android:enabled="false"
             android:layout_marginTop="10dp"
             android:backgroundTint="#167E1E"
             android:textAllCaps="false"

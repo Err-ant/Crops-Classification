@@ -26,7 +26,7 @@ public class CommentItemAdapter extends FirebaseRecyclerAdapter<CommentModel, Co
     @Override
     protected void onBindViewHolder(@NonNull CommentViewHolder holder, int position, @NonNull CommentModel model) {
 
-        Glide.with(holder.commentUserImage.getContext()).load(model.getCommentUserImage()).into(holder.commentUserImage);
+        Glide.with(holder.commentUserImage.getContext()).load(model.getCommentUserImage()).placeholder(R.drawable.ic_person_24).into(holder.commentUserImage);
         holder.commentUserName.setText(model.getCommentUserName());
         holder.commentText.setText(model.getCommentText());
         holder.commentDateTime.setText("Date :"+model.getCommentDate()+" Time :"+model.getCommentTime());

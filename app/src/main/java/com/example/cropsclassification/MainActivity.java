@@ -11,27 +11,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropsclassification.databinding.ActivityMainBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageReference;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding activityMainBinding;
 
     private FirebaseAuth authUser;
-    FirebaseUser firebaseUser;
-    StorageReference storageReference;
-    DatabaseReference databaseReference;
-
-    RecyclerView recyclerView;
-
 
     ListItemAdapter listItemAdapter;
 
@@ -94,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.deleteAccount:
                 Toast.makeText(this, "Delete account is selected", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.gotoRating:
+                Intent intentRating = new Intent(MainActivity.this, RatingActivity.class);
+                startActivity(intentRating);
                 return true;
 
             case R.id.logout:

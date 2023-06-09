@@ -36,6 +36,12 @@
     </item>
 
     <item
+        android:id="@+id/gotoRating"
+        android:title="Rate us"
+        app:showAsAction="never"
+        />
+
+    <item
         android:id="@+id/logout"
         android:title="@string/logout"
         app:showAsAction="never"

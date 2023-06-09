@@ -4,11 +4,10 @@ public class PostDetailsModel {
 
     public String profileImageUrl, imageURL;
     public String userID, userName, currDateTime, predictionResult, uploadLocation;
-    int numberOfReact, rating;
 
     public PostDetailsModel(){}
 
-    public PostDetailsModel(String profileImageUrl, String url, String userID, String userName, String currDateTime, String predictionResult, String uploadLocation, int numberOfReact, int rating) {
+    public PostDetailsModel(String profileImageUrl, String url, String userID, String userName, String currDateTime, String predictionResult, String uploadLocation) {
 
         this.profileImageUrl = profileImageUrl;
         this.imageURL = url;
@@ -17,8 +16,7 @@ public class PostDetailsModel {
         this.currDateTime = currDateTime;
         this.predictionResult = predictionResult;
         this.uploadLocation = uploadLocation;
-        this.numberOfReact = numberOfReact;
-        this.rating = rating;
+
 
     }
 
@@ -78,19 +76,4 @@ public class PostDetailsModel {
         this.uploadLocation = uploadLocation;
     }
 
-    public int getNumberOfReact() {
-        return numberOfReact;
-    }
-
-    public void setNumberOfReact(int numberOfReact) {
-        this.numberOfReact = numberOfReact;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
 }

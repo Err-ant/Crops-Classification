@@ -148,6 +148,7 @@ public class ClassifyActivity extends AppCompatActivity {
 
                     uploadLocation = addressList.get(0).getAddressLine(0);
                     activityClassifyBinding.textViewLocationAddress.setText(addressList.get(0).getAddressLine(0));
+                    activityClassifyBinding.sharePostBtn.setEnabled(true);
                     stopLocationUpdates();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -339,7 +340,7 @@ public class ClassifyActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     UserDetails userDetails = snapshot.getValue(UserDetails.class);
                     if(userDetails != null){
-                        userName = userDetails.userName;
+                        userName = userDetails.getUserName();
                     }
                 }
 
@@ -365,18 +366,28 @@ public class ClassifyActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
 
+                                    String postProfileImageUrl;
+                                    if (firebaseUser.getPhotoUrl() != null) {
+                                        postProfileImageUrl = firebaseUser.getPhotoUrl().toString();
+                                    } else {
+                                        // Set the profile image from a drawable resource
+                                        postProfileImageUrl = "android.resources://" + getPackageName() + "/" + R.drawable.ic_person_24;
+                                    }
+
                                     String imageURL = uri.toString();
+
+                                    String ImageUploadId = databaseReference.push().getKey();
+                                    PostDetailsModel imageUploadInfo = new PostDetailsModel(postProfileImageUrl, imageURL, userID, userName, currDateTime, predictionResult, uploadLocation);
+
+                                    databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
 
                                     Toast.makeText(getApplicationContext(), "Post Updated", Toast.LENGTH_LONG).show();
 
-                                    String ImageUploadId = databaseReference.push().getKey();
-
-                                    String postProfileImageUrl = firebaseUser.getPhotoUrl().toString();
-
-                                    PostDetailsModel imageUploadInfo = new PostDetailsModel(postProfileImageUrl, imageURL, userID, userName, currDateTime, predictionResult, uploadLocation, 0, 0);
-
-                                    databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
                                     activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
+                                    activityClassifyBinding.result.setText("");
+                                    activityClassifyBinding.sharePostBtn.setEnabled(false);
+                                    activityClassifyBinding.textViewLocationAddress.setText("");
+                                    activityClassifyBinding.imageView.setImageResource(R.drawable.ic_image_24);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
