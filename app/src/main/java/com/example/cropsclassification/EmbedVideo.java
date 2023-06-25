@@ -19,7 +19,11 @@ public class EmbedVideo extends AppCompatActivity {
 
         activityEmbedVideoBinding = ActivityEmbedVideoBinding.inflate(getLayoutInflater());
         setContentView(activityEmbedVideoBinding.getRoot());
-        getSupportActionBar().setTitle("Video Player");
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+        activityEmbedVideoBinding.actionbarVideo.actionTitle.setText("Video Player");
 
 
         activityEmbedVideoBinding.youtubeVideo.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {

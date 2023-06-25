@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, myViewHolder> {
+public class ProfilePostAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, ProfilePostViewHolder> {
 
     FirebaseUser firebaseUser;
     DatabaseReference likeRef;
@@ -28,21 +28,21 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
 
     private Context mContext;
 
-    public ListItemAdapter(@NonNull FirebaseRecyclerOptions<PostDetailsModel> options, Context context) {
+
+    public ProfilePostAdapter(@NonNull FirebaseRecyclerOptions<PostDetailsModel> options, Context context) {
         super(options);
         mContext = context;
     }
 
-
     @NonNull
     @Override
-    public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProfilePostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        return new myViewHolder(view);
+        return new ProfilePostViewHolder(view);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull myViewHolder holder, int position, @NonNull PostDetailsModel model) {
+    protected void onBindViewHolder(@NonNull ProfilePostViewHolder holder, int position, @NonNull PostDetailsModel model) {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = firebaseUser.getUid();
@@ -70,7 +70,7 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (testClick) {
-                            if (snapshot.child(postKey).hasChild(userId)) {
+                            if(snapshot.child(postKey).hasChild(userId)) {
                                 likeRef.child(postKey).child(userId).removeValue();
                                 testClick = false;
                             } else {
@@ -111,7 +111,7 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
                 mContext.startActivity(intent);
             }
         });
-        
+
         holder.postAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +122,7 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
 
     }
 
+
     public void updateOptions(FirebaseRecyclerOptions<PostDetailsModel> newOptions) {
         // Update the options for the adapter
         // Call the super class's `updateOptions()` method with the new options
@@ -130,7 +131,5 @@ public class ListItemAdapter extends FirebaseRecyclerAdapter<PostDetailsModel, m
         // Notify the adapter about the data set changes
         notifyDataSetChanged();
     }
-
-
 
 }

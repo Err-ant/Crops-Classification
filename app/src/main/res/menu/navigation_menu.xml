@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+
+        <item android:id="@+id/toHome"
+            android:title="Home"
+            android:icon="@drawable/ic_home_24"
+            />
+
+        <item android:id="@+id/toProfile"
+            android:title="Profile"
+            android:icon="@drawable/ic_person_24"
+            />
+
+        <item android:id="@+id/toClassify"
+            android:title="@string/classify_crops"
+            android:icon="@drawable/ic_baseline_category_24"
+            />
+
+        <item android:id="@+id/toMultiDrop"
+            android:title="Dropdown"
+            android:icon="@drawable/ic_drop_down_circle_24"
+            />
+        <item android:id="@+id/toYoutube"
+            android:title="Video Player"
+            android:icon="@drawable/ic_video_library_24"
+            />
+        <item android:id="@+id/toPdfGenerator"
+            android:title="Generate PDF"
+            android:icon="@drawable/ic_baseline_pdf_24"
+            />
+
+    </group>
+
+    <item android:title="Additional"
+
+        >
+
+        <menu>
+
+
+            <item android:id="@+id/toSetting"
+                android:title="Setting"
+                android:icon="@android:drawable/ic_menu_manage"/>
+
+
+            <item android:id="@+id/toRate"
+                android:icon="@android:drawable/btn_star_big_on"
+                android:title="Rate Us"/>
+
+
+            <item android:id="@+id/toLogout"
+                android:icon="@android:drawable/presence_busy"
+                android:title="@string/logout"/>
+
+        </menu>
+
+    </item>
+</menu>

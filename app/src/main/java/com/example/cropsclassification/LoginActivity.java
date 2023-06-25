@@ -1,6 +1,7 @@
 package com.example.cropsclassification;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -47,8 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activityLoginBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(activityLoginBinding.getRoot());
-        getSupportActionBar().setTitle("Login");
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+        activityLoginBinding.actionbarLogin.actionTitle.setText("Login");
 
         editTextLoginEmail = findViewById(R.id.edit_text_login_email);
         editTextLoginPassword =  findViewById(R.id.edit_text_login_password);
@@ -57,6 +61,14 @@ public class LoginActivity extends AppCompatActivity {
         alreadyHaveAccount = findViewById(R.id.text_view_have_account);
 
         authUser = FirebaseAuth.getInstance();
+
+        SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+        String checkbox = preferences.getString("remember", "");
+        if(checkbox.equals("true")){
+            Intent toMainActivity = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(toMainActivity);
+            finish();
+        }
 
 
         activityLoginBinding.editTextLoginEmail.addTextChangedListener(new TextWatcher() {
@@ -160,13 +172,26 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Logged in successfully.",
                             Toast.LENGTH_SHORT).show();
 
+
+                    if(activityLoginBinding.rememberMeCheck.isChecked()){
+
+                        SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("remember", "true");
+                        editor.apply();
+
+                    }
+                    else if(!activityLoginBinding.rememberMeCheck.isChecked()){
+
+                        SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("remember", "false");
+                        editor.apply();
+
+                    }
+
                     //Open MainPage after successfully Login.
-
-
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            | Intent.FLAG_ACTIVITY_NEW_TASK);
-
                     startActivity(intent);
                     finish();
 

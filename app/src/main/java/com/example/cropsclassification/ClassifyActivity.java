@@ -84,7 +84,11 @@ public class ClassifyActivity extends AppCompatActivity {
 
         activityClassifyBinding = ActivityClassifyBinding.inflate(getLayoutInflater());
         setContentView(activityClassifyBinding.getRoot());
-        getSupportActionBar().setTitle("Classify Crops");
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+        activityClassifyBinding.actionbarClassification.actionTitle.setText("Classify");
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();

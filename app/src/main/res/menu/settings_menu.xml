@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/gotoProfile"
-        android:title="Profile"
+        android:id="@+id/gotoClassify"
+        android:title="@string/classify_crops"
         app:showAsAction="never"
         />
     <item
-        android:id="@+id/gotoClassify"
-        android:title="@string/classify_crops"
+        android:id="@+id/gotoMultiDrop"
+        android:title="@string/multiple_drop"
         app:showAsAction="never"
         />
     <item

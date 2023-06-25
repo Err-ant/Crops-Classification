@@ -4,11 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
+    android:padding="0dp"
     android:background="@color/light_gray"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".LoginActivity">
+
+    <include
+        android:id="@+id/actionbar_login"
+        layout="@layout/common_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,19 +22,16 @@
         android:orientation="vertical"
         android:gravity="center"
         android:background="@color/white"
-        android:padding="10dp">
+        android:padding="20dp">
 
-        <TextView
-            android:id="@+id/text_view_login_head"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="@string/login_head"
-            android:textAlignment="center"
-            android:textColor="#362B4E"
-            android:textStyle="bold"
-            android:textSize="40sp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:src="@drawable/login_icon"
+            android:layout_marginLeft="0dp"
+            >
+
+        </ImageView>
 
 
         <TextView
@@ -82,13 +85,25 @@
             android:padding="5dp"
             android:textSize="18sp" />
 
+        <CheckBox
+            android:id="@+id/rememberMeCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Remember me"
+            android:layout_gravity="start"
+
+            >
+
+        </CheckBox>
+
 
         <Button
             android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="50dp"
             android:backgroundTint="#167E1E"
             android:text="@string/login_btn"

@@ -2,8 +2,6 @@ package com.example.cropsclassification;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,14 +15,12 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //setContentView(R.layout.main);
-
         activityWelcomeBinding = ActivityWelcomeBinding.inflate(getLayoutInflater());
         setContentView(activityWelcomeBinding.getRoot());
-        getSupportActionBar().setTitle("Welcome");
+        //getSupportActionBar().setTitle("Welcome");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -47,7 +43,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
     public void startApp(){
-        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+        Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

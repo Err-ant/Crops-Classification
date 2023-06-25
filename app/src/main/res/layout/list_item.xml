@@ -25,11 +25,9 @@
             />
 
         <!-- User Name and Timestamp -->
-        <LinearLayout
-            android:orientation="vertical"
+        <RelativeLayout
             android:layout_marginStart="16dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
@@ -41,15 +39,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <ImageView
+                android:id="@+id/postAction"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_more_horizon_24"
+                android:layout_above="@+id/postTimestamp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentEnd="true" />
+
             <TextView
                 android:id="@+id/postTimestamp"
                 android:text="2 hours ago"
                 android:textSize="14sp"
                 android:textColor="#8C8C8C"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/postUserName"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -169,4 +178,7 @@
         android:layout_height="5dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/line_divider"/>
+
+
 </LinearLayout>
+

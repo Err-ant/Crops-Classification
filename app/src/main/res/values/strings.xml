@@ -32,6 +32,12 @@
     <string name="register_head">Registration</string>
     <string name="login_head">Log in</string>
     <string name="rating_format">%.1f</string>
+    <string name="multiple_drop">Dropdown</string>
+
+
+    <string name="open">Open </string>
+
+    <string name="close"> Close</string>
 
 
     <string-array name="crops_name">
@@ -50,5 +56,131 @@
         <item>This is Wheat Plant</item>
     </string-array>
 
+
+    <string-array name="array_semester">
+        <item>Select Semester</item>
+        <item>1st Semester</item>
+        <item>2nd Semester</item>
+        <item>3rd Semester</item>
+        <item>4th Semester</item>
+        <item>5th Semester</item>
+        <item>6th Semester</item>
+        <item>7th Semester</item>
+        <item>8th Semester</item>
+
+    </string-array>
+
+    <string-array name="array_course">
+        <item>Select Course</item>
+    </string-array>
+
+    <string-array name="array_first_semester">
+        <item>Select Course</item>
+        <item>CSE-111: Introduction to Computer System and Computing Agents</item>
+        <item>CSE-113: Structured Programming Language</item>
+        <item>CSE-114: Structured Programming Language Lab</item>
+        <item>EEE-121: Electrical Engineering</item>
+        <item>EEE-122: Electrical Engineering Lab</item>
+        <item>MAT-131: Matrices, Vector Analysis and Geometry</item>
+        <item>STA-151: Basic Statistics</item>
+
+
+    </string-array>
+
+    <string-array name="array_second_semester">
+        <item>Select Course</item>
+        <item>CSE-211: Data Structures</item>
+        <item>CSE-212: Data Structures Lab</item>
+        <item>CSE-214: Engineering Drawing Lab</item>
+        <item>EEE-221: Basic Electronic Devices and Circuits</item>
+        <item>EEE-222: Basic Electronic Devices and Circuits Lab</item>
+        <item>MAT-231: Calculus and Differential Equations</item>
+        <item>MAT-233: Discrete Mathematics</item>
+        <item>PHY-241: Electricity, Magnetism and Optics</item>
+        <item>ENG-271: English</item>
+
+    </string-array>
+
+    <string-array name="array_third_semester">
+        <item>Select Course</item>
+        <item>CSE-311: Object Oriented Programming Language</item>
+        <item>CSE-312: Object Oriented Programming Language Lab</item>
+        <item>EEE-321: Digital Logic design</item>
+        <item>EEE-322: Digital Logic design Lab</item>
+        <item>MAT-331: Complex Variables, Laplace and Fourier Transformation</item>
+        <item>STA-351: Probability and Statistical Analysis</item>
+        <item>ECO-381: Economics</item>
+
+    </string-array>
+
+    <string-array name="array_fourth_semester">
+        <item>Select Course</item>
+        <item>CSE-411: Design and Analysis of Algorithms</item>
+        <item>CSE-412: Design and Analysis of Algorithms Lab</item>
+        <item>CSE-413: Database System</item>
+        <item>CSE-414: Database System Lab</item>
+        <item>CSE-415: Microprocessors</item>
+        <item>CSE-416: Microprocessors Lab</item>
+        <item>MAT-431: Numerical Methods</item>
+        <item>MAT-432: Numerical Methods Lab</item>
+
+    </string-array>
+
+    <string-array name="array_fifth_semester">
+        <item>Select Course</item>
+        <item>CSE-511: Operating Systems</item>
+        <item>CSE-512: Operating Systems Lab</item>
+        <item>CSE-513: Data Communication</item>
+        <item>CSE-514: Data Communication Lab</item>
+        <item>CSE-515: Software Engineering and Design Pattern</item>
+        <item>CSE-516: Software Engineering and Design Pattern Lab</item>
+        <item>CSE-517: Computer Architecture</item>
+        <item>CSE-519: Ethics and Cyber Law</item>
+        <item>ACC-591: Accounting and Management</item>
+
+    </string-array>
+
+    <string-array name="array_sixth_semester">
+        <item>Select Course</item>
+        <item>CSE-611: Computer Interfacing and Microcontroller</item>
+        <item>CSE-612: Computer Interfacing and Microcontroller Lab</item>
+        <item>CSE-613: Computer Networks</item>
+        <item>CSE-614: Computer Networks Lab</item>
+        <item>CSE-615: Web Engineering</item>
+        <item>CSE-616: Web Engineering Lab</item>
+        <item>CSE-617: Theory of Computation</item>
+        <item>CSE-618: Mobile Apps Development Lab</item>
+        <item>EEE-621: Telecommunication Engineering</item>
+        <item>ENG-672: Technical Writing and Presentation</item>
+
+    </string-array>
+
+    <string-array name="array_seventh_semester">
+        <item>Select Course</item>
+        <item>CSE-700: Project / Thesis</item>
+        <item>CSE-711: Compilers</item>
+        <item>CSE-712: Compilers Lab</item>
+        <item>CSE-713: Artificial Intelligence</item>
+        <item>CSE-714: Artificial Intelligence Lab</item>
+        <item>CSE-715: Computer Graphics</item>
+        <item>CSE-716: Computer Graphics Lab</item>
+        <item>CSE-717: Information Security</item>
+        <item>CSE-718: Industrial Training</item>
+        <item>CSE-719: Modeling and Simulation</item>
+
+    </string-array>
+
+    <string-array name="array_eighth_semester">
+        <item>Select Course</item>
+        <item>CSE-800: Project / Thesis</item>
+        <item>CSE-811: Digital Image Processing</item>
+        <item>CSE-812: Digital Image Processing Lab</item>
+        <item>CSE-813: Distributed Cloud Computing</item>
+        <item>CSE-814: Distributed Cloud Computing Lab</item>
+        <item>CSE-815: Machine Learning</item>
+        <item>CSE-816: Machine Learning Lab</item>
+        <item>CSE-817: Option-II</item>
+
+    </string-array>
 
 </resources>

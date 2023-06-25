@@ -1,44 +1,37 @@
 package com.example.cropsclassification;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cropsclassification.databinding.ActivityProfileBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity {
 
+
     ActivityProfileBinding activityProfileBinding;
 
-    FirebaseAuth firebaseAuth;
-    StorageReference storageRef;
     FirebaseUser firebaseUser;
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private Uri uriImage;
-    String fullName, email, dob, gender, mobile;
+    String fullName, email;
+
+    ProfilePostAdapter profilePostAdapter;
 
 
 
@@ -49,33 +42,43 @@ public class ProfileActivity extends AppCompatActivity {
 
         activityProfileBinding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(activityProfileBinding.getRoot());
-        getSupportActionBar().setTitle("Profile");
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+        activityProfileBinding.actionbarProfile.actionTitle.setText("Profile");
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = firebaseUser.getUid();
+
         showUserProfileDetails();
 
-        storageRef = FirebaseStorage.getInstance().getReference("ProfilePicture");
-
-        //choosing image to upload
-        activityProfileBinding.imageViewProfilePic.setOnClickListener(new View.OnClickListener() {
+        activityProfileBinding.profileDetailsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFileChooser();
+                Intent intentEditProfile = new Intent(ProfileActivity.this, EditProfile.class);
+                startActivity(intentEditProfile);
             }
         });
 
-        activityProfileBinding.uploadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadProfilePicture();
-            }
-        });
+        activityProfileBinding.recyclerViewIdProfile.setLayoutManager(new LinearLayoutManager(this));
 
-        // Set user's profile picture after uploaded
 
+        // Set up the initial query for the first page of posts
+        DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        Query query = postsRef.orderByChild("userID").equalTo(userId);
+
+        FirebaseRecyclerOptions<PostDetailsModel> options =
+                new FirebaseRecyclerOptions.Builder<PostDetailsModel>()
+                        .setQuery(query, PostDetailsModel.class)
+                        .build();
+
+        profilePostAdapter = new ProfilePostAdapter(options, ProfileActivity.this);
+        activityProfileBinding.recyclerViewIdProfile.setAdapter(profilePostAdapter);
 
     }
+
+
 
     private void showUserProfileDetails() {
 
@@ -88,17 +91,11 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 UserDetails userDetails = snapshot.getValue(UserDetails.class);
                 if(userDetails != null){
-                    fullName = userDetails.userName;
+                    fullName = userDetails.getUserName();
                     email = firebaseUser.getEmail();
-                    dob = userDetails.dob;
-                    gender = userDetails.gender;
-                    mobile =  userDetails.mobile;
 
-                    activityProfileBinding.profileName.setText("Name: " + fullName);
-                    activityProfileBinding.profileEmail.setText("Email: " + email);
-                    activityProfileBinding.profileMobile.setText("Mobile: " + mobile);
-                    activityProfileBinding.profileDob.setText("Date of Birth: " + dob);
-                    activityProfileBinding.profileGender.setText("Gender: " + gender);
+                    activityProfileBinding.profileName.setText(fullName);
+                    activityProfileBinding.profileEmail.setText(email);
 
                     Uri uri = firebaseUser.getPhotoUrl();
                     //Set user's current DP in imageView(If uploaded already).
@@ -114,66 +111,17 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadProfilePicture() {
-        if(uriImage != null){
 
-            //save the image with uid of the currently logged user
-            StorageReference fileReference = storageRef.child(firebaseAuth.getCurrentUser().getUid() + "."
-            + getFileExtension(uriImage));
 
-            //Upload image to storage
-            fileReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Uri downloadUri = uri;
 
-                            firebaseUser = firebaseAuth.getCurrentUser();
-
-                            // Finally set the display image of the user after upload
-                            UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
-                                    .setPhotoUri(downloadUri).build();
-                            firebaseUser.updateProfile(userProfileChangeRequest);
-
-                        }
-                    });
-                    Toast.makeText(ProfileActivity.this, "Uploaded successful!", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(ProfileActivity.this, "Upload failed, try again!", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        else
-        {
-            Toast.makeText(ProfileActivity.this, "No profile picture was selected!", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private String getFileExtension(Uri uriImage) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uriImage));
-    }
-
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data !=null && data.getData() != null){
-            uriImage = data.getData();
-            activityProfileBinding.imageViewProfilePic.setImageURI(uriImage);
-        }
+    protected void onStart() {
+        super.onStart();
+        profilePostAdapter.startListening();
     }
+
+
+
 }
+

@@ -40,7 +40,11 @@ public class CommentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activityCommentBinding = ActivityCommentBinding.inflate(getLayoutInflater());
         setContentView(activityCommentBinding.getRoot());
-        getSupportActionBar().setTitle("Comment");
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+        activityCommentBinding.actionbarComment.actionTitle.setText("Comment");
 
         postKey=getIntent().getStringExtra("postKey");
 
