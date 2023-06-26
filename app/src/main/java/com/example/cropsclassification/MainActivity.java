@@ -157,6 +157,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intentPdfGen);
                         break;
 
+                    case R.id.toGsapSaaS:
+                        // Handle 'See youtube video' item click
+                        Intent intentGsap = new Intent(MainActivity.this, GsapActivity.class);
+                        startActivity(intentGsap);
+                        break;
+
                     case R.id.toSetting:
                         // Handle 'Setting' item click
                         Toast.makeText(MainActivity.this, "Setting is selected", Toast.LENGTH_SHORT).show();

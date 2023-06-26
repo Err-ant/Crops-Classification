@@ -108,7 +108,7 @@ public class CommentActivity extends AppCompatActivity {
         String randomPostKey = currentUserId +""+new Random().nextInt(1000);
 
         Calendar dateValue = Calendar.getInstance();
-        SimpleDateFormat dateFormat=new SimpleDateFormat("dd-mm-yy");
+        SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yy");
         String currDate=dateFormat.format(dateValue.getTime());
 
         SimpleDateFormat timeFormat=new SimpleDateFormat("HH:mm");

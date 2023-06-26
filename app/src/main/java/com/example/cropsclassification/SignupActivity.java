@@ -272,11 +272,7 @@ public class SignupActivity extends AppCompatActivity {
 
                                         //Open MainPage after successfully registered.
 
-
-                                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                                | Intent.FLAG_ACTIVITY_NEW_TASK);
-
+                                        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                                         startActivity(intent);
                                         finish();
 

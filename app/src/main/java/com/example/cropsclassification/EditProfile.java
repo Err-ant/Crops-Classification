@@ -209,9 +209,15 @@ public class EditProfile extends AppCompatActivity {
                                     .setPhotoUri(downloadUri).build();
                             firebaseUser.updateProfile(userProfileChangeRequest);
 
-                            updateProfileImageUrlForPostAndComments();
+                            Toast.makeText(EditProfile.this, "Uploaded successful!", Toast.LENGTH_SHORT).show();
+                            activityEditProfileBinding.uploadProgressBar.setVisibility(View.GONE);
+                            activityEditProfileBinding.addPhoto.setVisibility(View.VISIBLE);
+
+                            String userProfileImageUrl = downloadUri.toString();
+                            updateProfileImageUrlForPostAndComments(userProfileImageUrl);
                         }
                     });
+
 
 
 
@@ -256,11 +262,10 @@ public class EditProfile extends AppCompatActivity {
         }
     }
 
-    private void updateProfileImageUrlForPostAndComments() {
+    private void updateProfileImageUrlForPostAndComments(String userProfileImageUrl) {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String userID = firebaseUser.getUid();
-        String userProfileImageUrl = firebaseUser.getPhotoUrl().toString();
 
         DatabaseReference postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
         postRef.addValueEventListener(new ValueEventListener() {
@@ -300,6 +305,7 @@ public class EditProfile extends AppCompatActivity {
                         }
                     }
                 }
+
             }
 
             @Override
@@ -307,8 +313,6 @@ public class EditProfile extends AppCompatActivity {
 
             }
         });
-        Toast.makeText(EditProfile.this, "Uploaded successful!", Toast.LENGTH_SHORT).show();
-        activityEditProfileBinding.uploadProgressBar.setVisibility(View.GONE);
-        activityEditProfileBinding.addPhoto.setVisibility(View.VISIBLE);
+        Toast.makeText(EditProfile.this, "Post and comments images updated successfully!", Toast.LENGTH_LONG).show();
     }
 }

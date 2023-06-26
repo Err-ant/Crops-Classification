@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Build;
@@ -113,6 +114,16 @@ public class PdfGenerator extends AppCompatActivity {
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(400, 600, 1).create();
         PdfDocument.Page page1 = pdfDocument.startPage(pageInfo);
         Canvas canvas = page1.getCanvas();
+
+        // Draw icon
+        Drawable iconDrawable = getResources().getDrawable(R.drawable.ic_baseline_menu_24);
+        float scale = getResources().getDisplayMetrics().density;
+        int iconWidthDP = 15; // Desired width in dp
+        int iconWidthPixels = (int) (iconWidthDP * scale + 0.5f);
+        int iconHeightDP = 20; // Desired height in dp
+        int iconHeightPixels = (int) (iconHeightDP * scale + 0.5f);
+        iconDrawable.setBounds(0, 0, iconWidthPixels, iconHeightPixels);
+        iconDrawable.draw(canvas);
 
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(20f);
