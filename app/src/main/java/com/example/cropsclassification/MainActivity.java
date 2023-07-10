@@ -95,12 +95,12 @@ public class MainActivity extends AppCompatActivity {
 
         activityMainBinding.recyclerViewID.setAdapter(listItemAdapter);
 
-        activityMainBinding.currentPage2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentPagePosts(2);
-            }
-        });
+//        activityMainBinding.currentPage2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                currentPagePosts(2);
+//            }
+//        });
 
     }
 
@@ -161,6 +161,12 @@ public class MainActivity extends AppCompatActivity {
                         // Handle 'See youtube video' item click
                         Intent intentGsap = new Intent(MainActivity.this, GsapActivity.class);
                         startActivity(intentGsap);
+                        break;
+
+                    case R.id.toRestApi:
+                        // Handle 'See youtube video' item click
+                        Intent intentApi = new Intent(MainActivity.this, RestApi.class);
+                        startActivity(intentApi);
                         break;
 
                     case R.id.toSetting:

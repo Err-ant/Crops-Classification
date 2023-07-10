@@ -211,6 +211,8 @@ public class ClassifyActivity extends AppCompatActivity {
     }
 
     private void createReport() {
+
+        activityClassifyBinding.progressBarPostBtn.setVisibility(View.VISIBLE);
         // PDF generator start
         PdfDocument pdfDocument = new PdfDocument();
         Paint paint = new Paint();
@@ -323,10 +325,13 @@ public class ClassifyActivity extends AppCompatActivity {
             pdfDocument.close();
             outputStream.close();
             Toast.makeText(ClassifyActivity.this, "PDF saved successfully", Toast.LENGTH_SHORT).show();
+            activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(ClassifyActivity.this, "Failed to save PDF", Toast.LENGTH_SHORT).show();
+            activityClassifyBinding.progressBarPostBtn.setVisibility(View.GONE);
         }
+
     }
 
 

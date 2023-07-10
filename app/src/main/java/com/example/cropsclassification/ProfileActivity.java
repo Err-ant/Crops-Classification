@@ -29,7 +29,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
 
-    String fullName, email;
+    String fullName, email, userId;
+
+    int currentPage = 1;
 
     ProfilePostAdapter profilePostAdapter;
 
@@ -49,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
         activityProfileBinding.actionbarProfile.actionTitle.setText("Profile");
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getUid();
+        userId = firebaseUser.getUid();
 
         showUserProfileDetails();
 
@@ -66,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Set up the initial query for the first page of posts
         DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
-        Query query = postsRef.orderByChild("userID").equalTo(userId);
+        Query query = postsRef.orderByChild("userID").equalTo(userId).limitToFirst(5);
 
         FirebaseRecyclerOptions<PostDetailsModel> options =
                 new FirebaseRecyclerOptions.Builder<PostDetailsModel>()
@@ -76,7 +78,32 @@ public class ProfileActivity extends AppCompatActivity {
         profilePostAdapter = new ProfilePostAdapter(options, ProfileActivity.this);
         activityProfileBinding.recyclerViewIdProfile.setAdapter(profilePostAdapter);
 
+
+        activityProfileBinding.btnShowMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMore();
+            }
+        });
+
     }
+
+    private void showMore() {
+        currentPage++;
+        int limit = currentPage * 5; // Calculate the new limit based on the current page
+
+        DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        Query query = postsRef.orderByChild("userID").equalTo(userId).limitToFirst(limit);
+
+        FirebaseRecyclerOptions<PostDetailsModel> options =
+                new FirebaseRecyclerOptions.Builder<PostDetailsModel>()
+                        .setQuery(query, PostDetailsModel.class)
+                        .build();
+        profilePostAdapter.updateOptions(options);
+        activityProfileBinding.btnShowMore.setText("Page " + String.valueOf(currentPage+1));
+
+    }
+
 
 
 

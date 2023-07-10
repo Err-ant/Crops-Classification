@@ -1,5 +1,6 @@
 package com.example.cropsclassification;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class ProfilePostAdapter extends FirebaseRecyclerAdapter<PostDetailsModel
     private Context mContext;
 
 
+    // Constructor
     public ProfilePostAdapter(@NonNull FirebaseRecyclerOptions<PostDetailsModel> options, Context context) {
         super(options);
         mContext = context;
@@ -122,14 +124,11 @@ public class ProfilePostAdapter extends FirebaseRecyclerAdapter<PostDetailsModel
 
     }
 
-
-    public void updateOptions(FirebaseRecyclerOptions<PostDetailsModel> newOptions) {
-        // Update the options for the adapter
-        // Call the super class's `updateOptions()` method with the new options
-        super.updateOptions(newOptions);
-
-        // Notify the adapter about the data set changes
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateOptions(FirebaseRecyclerOptions<PostDetailsModel> options) {
+        super.updateOptions(options);
         notifyDataSetChanged();
     }
+
 
 }
